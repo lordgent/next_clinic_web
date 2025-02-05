@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
 
 // API Endpoints
-const API_BASE = 'http://localhost:8000/api/user';
+const API_BASE = 'http://185.170.198.166:8000/api/user';
 
 const ENDPOINTS = {
   services: `${API_BASE}/services`,

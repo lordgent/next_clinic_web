@@ -39,6 +39,7 @@ const DetailService = () => {
   };
 
   const handleSelectedHour = () =>{
+    console.log('http://185.170.198.166:8000/storage/' + serviceDetail?.photo.replace(/\\/g, "/") )
 
   }
 
@@ -57,7 +58,6 @@ const DetailService = () => {
       </Layout>
     );
   }
-
   return (
     <Layout>
       <div className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-lg">
@@ -67,7 +67,7 @@ const DetailService = () => {
           <h2 className="text-xl font-semibold">Informasi Klinik</h2>
           <div className="w-full h-[180px] md:h-[350px]">
             <img
-              src={serviceDetail?.photo ? `http://localhost:8000/storage/${serviceDetail.photo.replace(/\\/g, "/")}` : "/default-image.jpg"}
+              src={serviceDetail?.photo ? `http://185.170.198.166:8000/storage/${serviceDetail.photo.replace(/\\/g, "/")}` : "/default-image.jpg"}
               alt="Foto Klinik"
               className="h-full w-full object-cover"
             />
