@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
 
-// API Endpoints
-const API_BASE = 'http://185.170.198.166:8000/api/user';
+const API_BASE = 'http://development.money-app.space:8081/api/user';
 
 const ENDPOINTS = {
   services: `${API_BASE}/services`,
@@ -10,7 +9,6 @@ const ENDPOINTS = {
   queue: (clinicId: string) => `${API_BASE}/clinic/queque/${clinicId}`,
 };
 
-// Interfaces for Type Safety
 interface Service {
   id: number;
   name: string;
@@ -21,8 +19,13 @@ interface Service {
 }
 
 interface Queue {
-  available_date: string;
+  id: string;
+  day: string;
   quota: number;
+  available_date: string;
+  open_time: string;
+  close_time: string;
+
 }
 
 interface ServiceState {
@@ -37,7 +40,6 @@ interface ServiceState {
   errorQueue: string | null;
 }
 
-// Fetch List of Services
 export const fetchService = createAsyncThunk('service/fetchService', async () => {
   const token = Cookies.get('token');
   const response = await fetch(ENDPOINTS.services, {
@@ -71,7 +73,6 @@ export const fetchDetailService = createAsyncThunk('service/fetchDetailService',
   return data.data || null;
 });
 
-// Fetch Queue Data
 export const fetchQueue = createAsyncThunk('service/fetchQueue', async (clinicId: string) => {
   const token = Cookies.get('token');
   const response = await fetch(ENDPOINTS.queue(clinicId), {
@@ -88,7 +89,6 @@ export const fetchQueue = createAsyncThunk('service/fetchQueue', async (clinicId
   return data.data || [];
 });
 
-// Initial State
 const initialState: ServiceState = {
   service: [],
   serviceDetail: null,
@@ -101,14 +101,12 @@ const initialState: ServiceState = {
   errorQueue: null,
 };
 
-// Redux Slice
 const serviceSlice = createSlice({
   name: 'service',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Fetch Service
       .addCase(fetchService.pending, (state) => {
         state.loadingService = true;
         state.errorService = null;
@@ -122,7 +120,6 @@ const serviceSlice = createSlice({
         state.errorService = action.error.message || 'Failed to fetch services';
       })
 
-      // Fetch Detail Service
       .addCase(fetchDetailService.pending, (state) => {
         state.loadingDetail = true;
         state.errorDetail = null;

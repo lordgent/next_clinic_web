@@ -13,7 +13,7 @@ const LoginPage: React.FC = () => {
     setError('');
 
     try {
-      const response = await fetch('http://185.170.198.166:8000/api/login', {
+      const response = await fetch('http://development.money-app.space:8081/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -22,17 +22,19 @@ const LoginPage: React.FC = () => {
       });
 
       const data = await response.json();
-      Cookies.set('token', data.data, { expires: 7, path: '/' });
 
+      if(data.data.role === "admin"){
+        window.location.href = '/admin/dashboard';
+      } else if(data.data.role === "user"){
+        window.location.href = '/user/home';
+      }
+      Cookies.set('token', data.data.token, { expires: 7, path: '/' });
 
       if (!response.ok) {
         throw new Error(data.message || 'Login failed');
       }
 
-      console.log(data)
-
-      alert('Login successful!');
-      window.location.href = '/user/home';
+  
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     }

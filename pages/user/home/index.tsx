@@ -21,13 +21,23 @@ const HomePage = () => {
     dispatch(fetchService())
   }, [dispatch]);
 
-  console.log(service)
   return (
     <Layout>
     <div className="flex flex-col gap-4">
-      <div className="w-full bg-gray-200 h-[200px] md:h-[400px]">
-        <img src="/images/banner.jpg" alt="banner" className="w-full h-full object-cover"/>
-      </div>
+    <div
+  className="w-full h-[200px] md:h-[400px] flex items-center text-sm md:text-xl font-semibold text-gray-700 p-4"
+  style={{
+    backgroundImage: `url('/images/banner.svg')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  }}
+>
+  <p className="text-white max-w-[80%] md:max-w-[50%] text-md md:text-2xl font-bold rounded-lg px-2 md:px-4 py-2">
+    HealthHub – Solusi Cerdas, Layanan Kesehatan Tanpa Lama Antre di Rumah Sakit
+  </p>
+</div>
+
+
 
       <div className="flex flex-col gap-6">
         <h3 className="text-xl font-semibold">Layanan</h3>

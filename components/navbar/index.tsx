@@ -10,7 +10,7 @@ const Navbar = () => {
   return (
     <div className="bg-blue-600 w-full flex items-center justify-center py-4">
       <div className="w-full max-w-[1200px] flex justify-between items-center px-6">
-        <Link href="/" className="text-white flex items-center text-xl font-bold">
+        <Link href="/user/home" className="text-white flex items-center text-xl font-bold">
         <Activity />
         HealthHub
         </Link>
@@ -46,7 +46,7 @@ const Navbar = () => {
       <Link href="/profile" className="block text-white">
         Profil Saya
       </Link>
-      <Link href="/profile" className="block text-white">
+      <Link href="/user/transaction" className="block text-white">
         Histori Transaksi
       </Link>
       <Link href="/logout" className="block text-white">
@@ -60,7 +60,7 @@ const Navbar = () => {
           <Link href="/profile" className="block text-white">
             Profil Saya
           </Link>
-          <Link href="/profile" className="block text-white">
+          <Link href="/user/transaction" className="block text-white">
             Histori Transaksi
           </Link>
           <Link href="/logout" className="block text-white">
