@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
 
-const API_BASE = 'http://development.money-app.space:8081/api/user';
+const API_BASE = 'http://185.170.198.166:8000/api/user';
 
 const ENDPOINTS = {
   transactionUser: `${API_BASE}/transaction-all`,

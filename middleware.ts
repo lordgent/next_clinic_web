@@ -12,7 +12,7 @@ export async function middleware(req: NextRequest) {
     }
 
     try {
-        const res = await fetch('http://development.money-app.space:8081/api/verify', {
+        const res = await fetch('http://185.170.198.166:8000/api/me', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

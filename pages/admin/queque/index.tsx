@@ -47,7 +47,7 @@ const AntreanPage = () => {
   const handleApprove = async (id: string) => {
     try {
         const token = Cookies.get('token');
-        const response = await fetch('http://development.money-app.space:8081/api/admin/transaction-update', {
+        const response = await fetch('http://185.170.198.166:8000/api/admin/transaction-update', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
