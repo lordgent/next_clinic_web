@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
 
-const API_BASE = 'http://185.170.198.166:8000/api/user';
+const API_BASE = 'http://apiclinic.l012d63n7.site:8181/api/user';
 
 export const fetchServiceInfo = createAsyncThunk(
   'service-info/fetchServiceInfo', 

@@ -13,7 +13,7 @@ const LoginPage: React.FC = () => {
     setError('');
 
     try {
-      const response = await fetch('http://185.170.198.166:8000/api/login', {
+      const response = await fetch('http://apiclinic.l012d63n7.site:8181/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

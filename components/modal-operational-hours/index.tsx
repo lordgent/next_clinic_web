@@ -79,7 +79,7 @@ const OperationalHoursModal: React.FC<OperationalHoursModalProps> = ({
 
     try {
       const token = Cookies.get("token");
-      const response = await fetch("http://185.170.198.166:8000/api/user/transaction", {
+      const response = await fetch("http://apiclinic.l012d63n7.site:8181/api/user/transaction", {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {

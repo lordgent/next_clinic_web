@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
 
-const API_URL = 'http://185.170.198.166:8000/api/user/categories';
+const API_URL = 'http://apiclinic.l012d63n7.site:8181/api/user/categories';
 
 export const fetchCategories = createAsyncThunk('category/fetchCategories', async () => {
   const token = Cookies.get('token');

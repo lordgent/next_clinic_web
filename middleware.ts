@@ -12,7 +12,7 @@ export async function middleware(req: NextRequest) {
     }
 
     try {
-        const res = await fetch('http://185.170.198.166:8000/api/me', {
+        const res = await fetch('http://apiclinic.l012d63n7.site:8181/api/me', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
