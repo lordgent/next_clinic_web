@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { API_URL } from "@/config/config";
 
 export async function POST(req: NextRequest) {
   const { email, password } = await req.json();
 
-  const res = await fetch('http://apiclinic.l012d63n7.site:8181/api/login', {
+  const res = await fetch(API_URL + '/api/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),

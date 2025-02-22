@@ -8,6 +8,7 @@ import { RootState, AppDispatch } from "../../../store/store";
 import { useRouter } from "next/router";
 import OperationalHoursModal from "@/components/modal-operational-hours";
 import { Loader2 } from 'lucide-react';
+import { API_URL } from "@/config/config";
 
 const DetailService = () => {
   const [isLoading, setIsLoading] = useState(false); 
@@ -75,7 +76,7 @@ const DetailService = () => {
           <h2 className="text-xl font-semibold">Informasi Klinik</h2>
           <div className="w-full h-[180px] md:h-[350px]">
             <img
-              src={serviceDetail?.photo ? `http://apiclinic.l012d63n7.site:8181/storage/${serviceDetail.photo.replace(/\\/g, "/")}` : "/default-image.jpg"}
+              src={serviceDetail?.photo ? `${API_URL}/storage/${serviceDetail.photo.replace(/\\/g, "/")}` : "/default-image.jpg"}
               alt="Foto Klinik"
               className="h-full w-full object-cover"
             />
@@ -108,7 +109,6 @@ const DetailService = () => {
         clinicId={serviceDetail?.id?.toString() || ""} 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
-        operationalHours={queue} 
         services={serviceInfo} 
       />
     </Layout>

@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
+import { API_URL } from "@/config/config";
 
-const API_URL = 'http://apiclinic.l012d63n7.site:8181/api/user/categories';
+const API = API_URL + '/api/user/categories';
 
 export const fetchCategories = createAsyncThunk('category/fetchCategories', async () => {
   const token = Cookies.get('token');
-  const response = await fetch(API_URL, {
+  const response = await fetch(API, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -18,13 +19,13 @@ export const fetchCategories = createAsyncThunk('category/fetchCategories', asyn
 
 export const createCategory = createAsyncThunk('category/createCategory', async (category: any) => {
   const token = Cookies.get('token');
-  const response = await fetch(API_URL, {
+  const response = await fetch(API, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
-    body: JSON.stringify(category),
+    body: JSON.stringify(category)
   });
   const data = await response.json();
   return data.category;

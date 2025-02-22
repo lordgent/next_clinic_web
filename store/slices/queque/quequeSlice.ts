@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
+import { API_URL } from "@/config/config";
 
-const API_BASE = 'http://apiclinic.l012d63n7.site:8181/api/admin';
+const API_BASE = API_URL + '/api/admin';
 
 const ENDPOINTS = {
   currentQueue: (clinicId: string) => `${API_BASE}/current-queque/${clinicId}`,

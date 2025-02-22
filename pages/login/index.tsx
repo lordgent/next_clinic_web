@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FaUser, FaLock } from 'react-icons/fa';
 import Cookies from 'js-cookie';
+import { API_URL } from "@/config/config";
 
 
 const LoginPage: React.FC = () => {
@@ -13,7 +14,7 @@ const LoginPage: React.FC = () => {
     setError('');
 
     try {
-      const response = await fetch('http://apiclinic.l012d63n7.site:8181/api/login', {
+      const response = await fetch(API_URL + '/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

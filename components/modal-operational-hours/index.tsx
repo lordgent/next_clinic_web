@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Cookies from 'js-cookie';
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
 import { formatRupiah } from "@/utils/formatNumber";
 import { Loader2 } from "lucide-react";
+import { API_URL } from "@/config/config";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface Service {
   id: string;
@@ -9,55 +14,32 @@ interface Service {
   price: string;
 }
 
-interface OperationalHours {
-  id: string;
-  day: string;
-  quota: number;
-  available_date: string;
-  open_time: string;
-  close_time: string;
-}
-
 interface OperationalHoursModalProps {
   isOpen: boolean;
   onClose: () => void;
-  operationalHours: OperationalHours[];
   services: Service[];
   clinicId: string;
-  setLoading: (loading: boolean) => void; 
+  setLoading: (loading: boolean) => void;
 }
 
 const OperationalHoursModal: React.FC<OperationalHoursModalProps> = ({
   isOpen,
   onClose,
   clinicId,
-  operationalHours,
   services,
   setLoading,
 }) => {
-  const [selectedHourId, setSelectedHourId] = useState<string | null>(null);
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false); // ✅ State loading untuk modal
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onClose();
-      }
+      if (event.key === "Escape") onClose();
     };
-
-    if (isOpen) {
-      window.addEventListener("keydown", handleKeyDown);
-    }
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+    if (isOpen) window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
-
-  const handleHourSelection = (id: string) => {
-    setSelectedHourId(id);
-  };
 
   const handleServiceSelection = (serviceId: string) => {
     setSelectedServiceId(serviceId);
@@ -65,83 +47,54 @@ const OperationalHoursModal: React.FC<OperationalHoursModalProps> = ({
 
   if (!isOpen) return null;
 
-  const isSubmitEnabled = selectedHourId && selectedServiceId;
+  const isSubmitEnabled = Boolean(selectedServiceId);
 
-  const onSubmit = async (selectedHourId: string, selectedServiceId: string) => {
-    setIsSubmitting(true); 
-    setLoading(true); 
-
-    const payload = {
-      clinic_id: clinicId,
-      booking_id: selectedHourId,
-      service_info_id: selectedServiceId,
-    };
-
+  const onSubmit = async () => {
+    setIsSubmitting(true);
+    setLoading(true);
     try {
       const token = Cookies.get("token");
-      const response = await fetch("http://apiclinic.l012d63n7.site:8181/api/user/transaction", {
+      const formattedDate = selectedDate ? format(selectedDate, "dd-MM-yyyy") : "";
+
+      const response = await fetch(`${API_URL}/api/user/transaction`, {
         method: "POST",
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          clinic_id: clinicId,
+          service_info_id: selectedServiceId,
+          booking_date: formattedDate,
+
+        }),
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-
-      if (response.ok) {
-        window.location.reload
-      }
+      if (response.ok) window.location.reload();
     } catch (error) {
       alert("Terjadi kesalahan jaringan");
     } finally {
-      setIsSubmitting(false); 
-      setLoading(false); 
+      setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
   return (
-    <div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4 md:p-8"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg transform transition-all scale-95 opacity-100 max-h-[80vh] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h2 className="text-xl font-semibold mb-4">Jam Operasional dan Pilihan Service</h2>
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4 md:p-8" onClick={onClose}>
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg transform transition-all max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <h2 className="text-xl font-semibold mb-4">Tanggal Booking dan Pilihan Service</h2>
 
-        {/* Operational Hours List */}
-        {operationalHours.length > 0 ? (
-          <div className="mb-6">
-            <h3 className="font-semibold text-lg mb-4">Jam Operasional</h3>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {operationalHours.map((item) => (
-                <li
-                  key={item.id}
-                  className={`border p-4 rounded-lg shadow-md transition-all duration-300 ease-in-out ${
-                    selectedHourId === item.id ? "bg-blue-200 opacity-80" : "hover:bg-blue-100"
-                  }`}
-                >
-                  <div className="flex flex-col space-y-2">
-                    <span className="font-medium text-lg">{item.day}</span>
-                    <span className="text-sm text-gray-600">Kuota Tersedia: {item.quota}</span>
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    Jam Operasional: {item.open_time} - {item.close_time}
-                  </div>
-                  <button
-                    onClick={() => handleHourSelection(item.id)}
-                    className="bg-blue-600 text-white py-1 px-4 rounded-md hover:bg-blue-700 transition duration-200 ease-in-out w-full mt-2"
-                  >
-                    {selectedHourId === item.id ? "Terpilih" : "Pilih"}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : (
-          <p className="text-gray-500 text-center mb-6">Tidak ada data antrian.</p>
-        )}
+        {/* Date Picker */}
+        <div className="mb-6">
+          <h3 className="font-semibold text-lg mb-4">Tanggal Booking</h3>
+          <DatePicker
+            selected={selectedDate}
+            onChange={(date) => setSelectedDate(date)}
+            dateFormat="dd-MM-yyyy"
+            locale={id}
+            inline
+            className="border p-2 rounded-lg w-full"
+          />
+        </div>
 
         {/* Service List */}
         {services.length > 0 ? (
@@ -149,20 +102,12 @@ const OperationalHoursModal: React.FC<OperationalHoursModalProps> = ({
             <h3 className="font-semibold text-lg mb-4">Pilih Layanan</h3>
             <ul className="space-y-4">
               {services.map((service) => (
-                <li
-                  key={service.id}
-                  className={`border p-4 rounded-lg shadow-md transition-all duration-300 ease-in-out ${
-                    selectedServiceId === service.id ? "bg-blue-200 opacity-80" : "hover:bg-blue-100"
-                  }`}
-                >
+                <li key={service.id} className={`border p-4 rounded-lg shadow-md transition-all ${selectedServiceId === service.id ? "bg-blue-200" : "hover:bg-blue-100"}`}>
                   <div className="flex flex-col space-y-2">
                     <span className="font-medium text-lg">{service.name}</span>
                     <span className="text-sm text-gray-600">Harga: {formatRupiah(parseInt(service.price))}</span>
                   </div>
-                  <button
-                    onClick={() => handleServiceSelection(service.id)}
-                    className="bg-blue-600 text-white py-1 px-4 rounded-md hover:bg-blue-700 transition duration-200 ease-in-out w-full mt-2"
-                  >
+                  <button onClick={() => handleServiceSelection(service.id)} className="bg-blue-600 text-white py-1 px-4 rounded-md w-full mt-2">
                     {selectedServiceId === service.id ? "Terpilih" : "Pilih"}
                   </button>
                 </li>
@@ -174,27 +119,11 @@ const OperationalHoursModal: React.FC<OperationalHoursModalProps> = ({
         )}
 
         {/* Submit Button */}
-        <button
-          onClick={() => {
-            if (selectedHourId && selectedServiceId) {
-              onSubmit(selectedHourId, selectedServiceId);
-            }
-          }}
-          disabled={!isSubmitEnabled || isSubmitting}
-          className={`mt-4 w-full py-2 rounded-lg transition flex justify-center items-center ${
-            isSubmitEnabled && !isSubmitting
-              ? "bg-blue-600 hover:bg-blue-700 text-white"
-              : "bg-gray-400 text-gray-200 cursor-not-allowed"
-          }`}
-        >
+        <button onClick={onSubmit} disabled={!isSubmitEnabled || isSubmitting} className={`mt-4 w-full py-2 rounded-lg flex justify-center items-center ${isSubmitEnabled && !isSubmitting ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-gray-400 text-gray-200 cursor-not-allowed"}`}>
           {isSubmitting ? <Loader2 className="animate-spin w-5 h-5" /> : "Pesan"}
         </button>
 
-        <button
-          onClick={onClose}
-          className="mt-4 w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition"
-          disabled={isSubmitting}
-        >
+        <button onClick={onClose} className="mt-4 w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600" disabled={isSubmitting}>
           Tutup
         </button>
       </div>

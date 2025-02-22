@@ -1,18 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { API_URL } from "@/config/config";
+
 
 export async function middleware(req: NextRequest) {
     const token = req.cookies.get('token')?.value;
 
-    // if (token && (req.nextUrl.pathname === '/login' || req.nextUrl.pathname === '/register')) {
-    //     return NextResponse.redirect(new URL('/user/home', req.url)); 
-    // }
 
     if (!token) {
         return NextResponse.redirect(new URL('/login', req.url));
     }
 
     try {
-        const res = await fetch('http://apiclinic.l012d63n7.site:8181/api/me', {
+        const res = await fetch( API_URL +'/api/me', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
