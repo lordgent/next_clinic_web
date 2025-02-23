@@ -10,8 +10,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
 
   const handleLogout = () => {
     Cookies.remove("token");
-
-    // Redirect ke halaman login
     router.push("/login");
   };
 
@@ -34,21 +32,12 @@ const Sidebar: React.FC<SidebarProps> = () => {
           </Link>
         </li>
         <li className="flex items-center p-2 hover:bg-blue-700 cursor-pointer">
-          <Link href="/admin/service" className="flex items-center">
-            <SquarePen
-              className="w-5
-              h-5 mr-2"
-            />
-            Layanan
-          </Link>
-        </li>
-        <li className="flex items-center p-2 hover:bg-blue-700 cursor-pointer">
           <Link href="/admin/clinics" className="flex items-center">
             <SquarePen
               className="w-5
               h-5 mr-2"
             />
-            Clinics
+            Layanan
           </Link>
         </li>
         <li

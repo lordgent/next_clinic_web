@@ -7,6 +7,7 @@ import {
 } from "../../../store/slices/queque/quequeSlice";
 import { RootState, AppDispatch } from "../../../store/store";
 import Cookies from 'js-cookie';
+import { API_URL } from "@/config/config";
 
 const AntreanPage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -47,13 +48,13 @@ const AntreanPage = () => {
   const handleApprove = async (id: string) => {
     try {
         const token = Cookies.get('token');
-        const response = await fetch('http://apiclinic.l012d63n7.site:8181/api/admin/transaction-update', {
-            method: 'POST',
+        const response = await fetch(API_URL + '/api/admin/transactions/'+ id +'/status', {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ "transaction_id": id }),
+            body: JSON.stringify({ "status": "approve" }),
         });
 
         const data = await response.json();
@@ -66,6 +67,29 @@ const AntreanPage = () => {
         console.error('Terjadi kesalahan:', error);
     }
 };
+const handleCompleted = async (id: string) => {
+  try {
+      const token = Cookies.get('token');
+      const response = await fetch(API_URL + '/api/admin/transactions/'+ id +'/status', {
+          method: 'PUT',
+          headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ "status": "completed" }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+          alert('Berhasil memperbarui transaksi!');
+      } else {
+          console.error('Gagal memperbarui transaksi:', data);
+      }
+  } catch (error) {
+      console.error('Terjadi kesalahan:', error);
+  }
+};
+
 
   const handleResetClinicId = () => {
     localStorage.removeItem("clinicId");
@@ -150,11 +174,21 @@ const AntreanPage = () => {
                           Skip
                         </button>
                         <button
-        onClick={() => handleApprove(queue.id as string)}
-        className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
-    >
-        Approve
-    </button>
+                          onClick={() => handleApprove(queue.id as string)}
+                          className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+                      >
+                          Approve
+                      </button>
+                        </div>
+                      )}
+                    {queue.status === "active" && (
+                        <div className="flex items-center justify-center gap-4">
+                            <button
+                              onClick={() => handleCompleted(queue.id as string)}
+                          className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-800"
+                        >
+                          Completed
+                        </button>
                         </div>
                       )}
                     </td>
@@ -175,6 +209,8 @@ const getStatusColor = (status: string) => {
       return "bg-yellow-500";
     case "called":
       return "bg-blue-500";
+    case "active":
+      return "bg-green-500"
     case "missed":
       return "bg-red-500";
     case "completed":

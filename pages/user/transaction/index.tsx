@@ -4,6 +4,7 @@ import { fetchUserTransaction } from "../../../store/slices/transcation/transact
 import { RootState, AppDispatch } from "../../../store/store";
 import { Loader2 } from 'lucide-react';
 import Layout from "../../../components/layouts";
+import { formatRupiah } from '@/utils/formatNumber';
 
 const TransactionPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -35,7 +36,7 @@ const TransactionPage = () => {
                 <p className="text-gray-700 font-medium">Kode Transaksi: <span className="font-normal">{transaction.transaction_code}</span></p>
                 <p className="text-gray-700 font-medium">Status: <span className="font-normal">{transaction.status}</span></p>
                 <p className="text-gray-700 font-medium">Nomor Antrian: <span className="font-normal">{transaction.no_antrian}</span></p>
-                <p className="text-gray-700 font-medium">Biaya Admin: <span className="font-normal">{transaction.admin_fee}</span></p>
+                <p className="text-gray-700 font-medium">Biaya Admin: <span className="font-normal">{formatRupiah(parseInt(transaction.admin_fee))}</span></p>
               </div>
             ))}
           </div>

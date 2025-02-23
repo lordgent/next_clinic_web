@@ -2,10 +2,20 @@ import { useState } from "react";
 
 import { Activity, Menu, Search, User } from "lucide-react";
 import Link from "next/link";
+import Cookies from "js-cookie"; // Pastikan sudah menginstal js-cookie
+import { useRouter } from "next/router";
+
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDesktop,setIsDesktop]= useState(false);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    Cookies.remove("token");
+
+    router.push("/login");
+  };
 
   return (
     <div className="bg-blue-600 w-full flex items-center justify-center py-4">
@@ -49,9 +59,9 @@ const Navbar = () => {
       <Link href="/user/transaction" className="block text-white">
         Histori Transaksi
       </Link>
-      <Link href="/logout" className="block text-white">
+      <div onClick={handleLogout} className="block text-white">
         Logout
-      </Link>
+      </div>
     </div>
     )}
 
