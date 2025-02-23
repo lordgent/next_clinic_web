@@ -53,8 +53,8 @@ const Navbar = () => {
 
     {isDesktop && (
       <div className="absolute hidden top-14 right-40 w-[250px] bg-blue-600 p-4 space-y-2 md:block">
-      <Link href="/profile" className="block text-white">
-        Profil Saya
+      <Link href="/user/profile" className="block text-white">
+        Profile
       </Link>
       <Link href="/user/transaction" className="block text-white">
         Histori Transaksi
@@ -67,8 +67,8 @@ const Navbar = () => {
 
       {isOpen && (
         <div className="absolute top-14 left-0 w-full bg-blue-600 p-4 space-y-2 md:hidden">
-          <Link href="/profile" className="block text-white">
-            Profil Saya
+          <Link href="/user/profile" className="block text-white">
+            Profile
           </Link>
           <Link href="/user/transaction" className="block text-white">
             Histori Transaksi
